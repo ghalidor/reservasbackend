@@ -3,6 +3,7 @@ using Aplication.CommandsQueries.ReservasCommandQueries;
 using Aplication.IRepositories;
 using Domain;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Utilitarios;
 
 namespace Aplication.Handlers.Reservas_CommandQueries
@@ -13,14 +14,15 @@ namespace Aplication.Handlers.Reservas_CommandQueries
         private readonly IReservaMesaRepository _reservaMesaRepository;
         private readonly IMesasRepository _mesasRepository;
         private readonly IZonasRepository _zonasRepository;
-
+        private readonly IConfiguration _configuracion;
         public CreateReservasCommandHandler(IReservasRepository reservasRepository, IMesasRepository mesasRepository,
-            IZonasRepository zonasRepository, IReservaMesaRepository reservaMesaRepository)
+            IZonasRepository zonasRepository, IReservaMesaRepository reservaMesaRepository, IConfiguration configuracion)
         {
             _reservasRepository = reservasRepository;
             _mesasRepository = mesasRepository;
             _zonasRepository = zonasRepository;
             _reservaMesaRepository = reservaMesaRepository;
+            _configuracion = configuracion;
         }
 
         public async Task<ServiceResponse> Handle(CreateReservasCommand request, CancellationToken cancellationToken)
@@ -34,6 +36,7 @@ namespace Aplication.Handlers.Reservas_CommandQueries
 
             try
             {
+                CorreoSends correo = new CorreoSends(_configuracion);
                 Reservas reservaNuevo = new Reservas();
                 reservaNuevo.Personas = reserva.Personas;
                 reservaNuevo.Fecha = reserva.Fecha;
@@ -44,7 +47,7 @@ namespace Aplication.Handlers.Reservas_CommandQueries
                 reservaNuevo.Telefono = reserva.Telefono;
                 reservaNuevo.Mensaje = reserva.Mensaje;
                 reservaNuevo.Mascotas = reserva.Mascotas;
-
+                reservaNuevo.Correo = reserva.Correo;
                 var mesasParaReservar = await _mesasRepository.ListMesasLibres();
                 var reservasdeDia = await _reservasRepository.ListaReservacionxDia(reserva.Fecha);
                 var mesas = await _reservaMesaRepository.ListaReservaMesaDia(reserva.Fecha);//mesas detalle de reserva
@@ -100,10 +103,17 @@ namespace Aplication.Handlers.Reservas_CommandQueries
                                 mesaReserva.Hora = reserva.Hora;
                                 mesaReserva.Fecha = reserva.Fecha;
                                 mesaReserva.Personas = registro.Pax;
+
                                 await _reservaMesaRepository.CreateReservaMesa(mesaReserva);
                             }
                             response.response = true;
                             response.message = "Registrado Corréctamente";
+
+                            string destinatarios = _configuracion["variables:destinatarios"];
+                            List<string> destinatarios_lista = destinatarios.Split(',').ToList();
+                            destinatarios_lista.Add(reserva.Correo);
+                            string listaCorreosEnviar = String.Join(",", destinatarios_lista);
+                            correo.envio_correoRemoto(reservaNuevo, listaCorreosEnviar);
                         }
                         else
                         {

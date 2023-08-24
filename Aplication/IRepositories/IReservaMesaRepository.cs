@@ -7,6 +7,7 @@ namespace Aplication.IRepositories
     {
         Task<IEnumerable<ReservaMesa>> ListaReservaMesa(int reservaId);
         Task<IEnumerable<ReservaMesa>> ListaReservaMesaDia(DateTime fecha);
+        Task<IEnumerable<ReservaMesaCompleto>> ListaReservaMesaRango(DateTime fechaini, DateTime fechafin);
         Task<bool> CreateReservaMesa(ReservaMesa reserva);
     }
 }

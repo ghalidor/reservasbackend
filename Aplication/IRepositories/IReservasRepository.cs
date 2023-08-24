@@ -11,6 +11,7 @@ namespace Aplication.IRepositories
         Task<bool> CreateReserva(Reservas reserva);
         Task<int> CreateReservaReturnId(Reservas reserva);
         Task<bool> UpdateReserva(Reservas reserva);
+        Task<bool> UpdateReservaEstado(Reservas reserva);
         Task<bool> DeleteReserva(int reservaId);
     }
 }

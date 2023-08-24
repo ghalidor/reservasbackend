@@ -31,6 +31,26 @@ namespace Persistence.Repositories
             return await db.QueryAsync<Mesas>(sql);
         }
 
+        public async Task<Mesas> MesaDetalle(int mesaid)
+        {
+            var db = _context.CreateConnectionPrimary();
+            var sql = @"SELECT [MesaId]
+      ,[Descripcion]
+      ,[NumeroMesa]
+      ,[EsActiva]
+      ,[Ocupada]
+      ,[SucursalId]
+      ,[ZonaId]
+      ,[EmpresaId]
+      ,[Servidor]
+      ,[Tipo]
+      ,[Pax]
+      ,[ParaReservar]
+  FROM [Mesas] where MesaId=@mesaid order by ZonaId desc";
+            return await db.QueryFirstOrDefaultAsync<Mesas>(sql, new { mesaid = mesaid });
+        }
+
+
         public async Task<IEnumerable<Mesas>> ListMesasLibres()
         {
             var db = _context.CreateConnectionPrimary();

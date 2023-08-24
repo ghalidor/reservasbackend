@@ -1,5 +1,7 @@
 ﻿
+using apiReservas.Seguridad;
 using Aplication.CommandsQueries.Zonas_CommandsQueries;
+using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +17,7 @@ namespace apiReservas.Controllers
             _mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpGet("ListaZonas")]
         public async Task<IActionResult> ListaZonas()
         {
@@ -30,6 +33,38 @@ namespace apiReservas.Controllers
             var data = await _mediator.Send(new ListZonasMesasAsignadasQuery());
             return new OkObjectResult(new { message, data });
         }
-       
+
+        [HttpGet("DetalleZona/{id}")]
+        public async Task<IActionResult> DetalleZona(int id)
+        {
+            string message = "Detalle";
+            var data = await _mediator.Send(new DetalleZonaQuery() { ZonaId = id });
+            return new OkObjectResult(new { message, data });
+        }
+
+        [HttpPost("CrearZona")]
+        public async Task<IActionResult> CrearZona([FromBody] Zonas reserva)
+        {
+            ServiceResponse respuesta = new ServiceResponse();
+            if(reserva == null)
+            {
+                respuesta.message = "No se envio Data";
+                respuesta.response = false;
+                return new OkObjectResult(new { message = respuesta.message, respuesta = respuesta.response });
+            }
+            var command = new CreateZonaCommand() { CreateZona = reserva };
+            respuesta = await _mediator.Send(command);
+            return new OkObjectResult(new { message = respuesta.message, respuesta = respuesta.response });
+        }
+
+        [HttpPost("UpdateZona")]
+        public async Task<IActionResult> UpdateZona([FromBody] Zonas reserva)
+        {
+            ServiceResponse respuesta = new ServiceResponse();         
+            var command = new UpdateZonaCommand() { UpdateZona = reserva };
+            respuesta = await _mediator.Send(command);
+            return new OkObjectResult(new { message = respuesta.message, respuesta = respuesta.response });
+        }
+
     }
 }

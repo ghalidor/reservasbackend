@@ -44,6 +44,32 @@ namespace Persistence.Repositories
             return await db.QueryAsync<ReservaMesa>(sql, new { fecha = fecha });
         }
 
+        public async Task<IEnumerable<ReservaMesaCompleto>> ListaReservaMesaRango(DateTime fechaini,DateTime fechafin)
+        {
+            var db = _context.CreateConnectionSecondary();
+            var sql = @"SELECT 
+res.[ReservaId]
+      ,res.[Personas]
+      ,res.[Fecha]
+      ,res.[Hora]
+      ,res.[ZonaId]
+      ,res.[Nrodocumento]
+      ,res.[Nombre]
+      ,res.[Telefono]
+      ,res.[Mensaje]
+      ,res.Mascotas
+,res.Motivo
+  ,res.Correo
+,res.Estado
+,resmesa.[ReservaId]
+      , resmesa.[MesaId]
+	    , resmesa.Personas PersonasMesa
+  FROM [ReservaMesa] (nolock) resmesa
+  left join Reservas (nolock) res on res.ReservaId=resmesa.ReservaId
+  where   convert(date, resmesa.Fecha) between convert(date,@fechaini)   and convert(date,@fechafin)  
+  order by  res.[Fecha] desc ,res.[Hora] desc";
+            return await db.QueryAsync<ReservaMesaCompleto>(sql, new { fechaini = fechaini, fechafin = fechafin });
+        }
         public async Task<bool> CreateReservaMesa(ReservaMesa reserva)
         {
             var db = _context.CreateConnectionSecondary();

@@ -12,4 +12,24 @@ namespace Domain
         public string Telefono { get; set; }
         public int Personas { get; set; }
     }
+
+    public class UsuarioResponse
+    {
+        public int UsuarioId { get; set; }
+        public string Usuario { get; set; }
+        public string Password { get; set; }
+
+    }
+
+    public class UsuarioLogin
+    {
+        public string Usuario { get; set; }
+        public string Password { get; set; }
+
+    }
+    public class CorreoArchivoAdjunto
+    {
+        public MemoryStream? archivo { get; set; }
+        public string? nombre { get; set; }
+    }
 }

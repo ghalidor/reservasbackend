@@ -26,6 +26,20 @@ namespace Persistence.Repositories
             return await db.QueryAsync<Zonas>(sql);
         }
 
+        public async Task<Zonas> ZonaDetalle(int zonaid)
+        {
+            var db = _context.CreateConnectionPrimary();
+            var sql = @"SELECT [ZonaId]
+      ,[Descripcion]
+      ,[SucursalId]
+      ,[EsActivo]
+      ,[EmpresaId]
+      ,[Servidor]
+  FROM [Zona] where ZonaId=@zonaid order by ZonaId desc";
+            return await db.QueryFirstOrDefaultAsync<Zonas>(sql, new { zonaid = zonaid });
+        }
+
+
         public async Task<IEnumerable<ZonasMesasAsignadas>> ListMesasAsignadasZona()
         {
             var db = _context.CreateConnectionPrimary();

@@ -15,15 +15,30 @@ namespace Aplication.Handlers.Zonas_CommandsQueries
         }
         public async Task<ServiceResponse> Handle(UpdateZonaCommand query, CancellationToken cancellationToken)
         {
-            var empresa = query.UpdateZona;
+            var zona = query.UpdateZona;
             ServiceResponse response = new ServiceResponse();
             try
             {
-                response.response = await _zonaRepository.UpdateZona(empresa);
-                if (response.response)
+                if(zona != null)
                 {
-                    response.message = "Registrado Corréctamente";
+                    if(zona.ZonaId != 0)
+                    {
+                        response.response = await _zonaRepository.UpdateZona(zona);
+                        if(response.response)
+                        {
+                            response.message = "Registrado Corréctamente";
+                        }
+                    }
+                    else
+                    {
+                        response.message = "Erro no se envio el ID";
+                    }
                 }
+                else
+                {
+                    response.message = "No se envio data";
+                }
+                
             }
             catch (Exception ex)
             {

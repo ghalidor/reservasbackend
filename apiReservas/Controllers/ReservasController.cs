@@ -1,4 +1,5 @@
 ﻿
+using apiReservas.Seguridad;
 using Aplication.CommandsQueries.Mesas_CommandsQueries;
 using Aplication.CommandsQueries.ReservasCommandQueries;
 using Domain;
@@ -25,6 +26,7 @@ namespace apiReservas.Controllers
             return new OkObjectResult(new { message, data });
         }
 
+        [AllowAnonymous]
         [HttpGet("ListarReservaHorasZonaMesaLibre/{fecha}")]
         public async Task<IActionResult> GetBitacoraBySala(string fecha)
         {
@@ -33,6 +35,7 @@ namespace apiReservas.Controllers
             return new OkObjectResult(new {data= respuesta });
         }
 
+        [AllowAnonymous]
         [HttpPost("CrearReserva")]
         public async Task<IActionResult> CrearReserva([FromBody] ReservacionNuevo reserva)
         {
@@ -48,8 +51,8 @@ namespace apiReservas.Controllers
             return new OkObjectResult(new { message = respuesta.message, respuesta = respuesta.response });
         }
 
-        [HttpPut("UpdateReservas")]
-        public async Task<IActionResult> UpdateTurno([FromBody] Reservas reserva)
+        [HttpPost("UpdateReservas")]
+        public async Task<IActionResult> UpdateReservas([FromBody] Reservas reserva)
         {
             bool respuesta = false;
             string message = string.Empty;
@@ -64,7 +67,23 @@ namespace apiReservas.Controllers
             return new OkObjectResult(new { message, respuesta });
         }
 
-        [HttpDelete("EliminarReserva/{id}")]
+        [HttpPost("UpdateReservasEstado")]
+        public async Task<IActionResult> UpdateReservasEstado([FromBody] ReservaEstado reserva)
+        {
+            bool respuesta = false;
+            string message = string.Empty;
+            if(reserva == null)
+            {
+                message = "No se envio Data";
+                return new OkObjectResult(new { message, respuesta });
+            }
+            var command = new UpdateReservaEstadoCommand() { ReservaId = reserva.ReservaId,Estado=reserva.Estado ,Motivo=reserva.Motivo};
+            respuesta = await _mediator.Send(command);
+            message = respuesta ? "Actualizado Correctamente" : "No se puedo Actualizar, error";
+            return new OkObjectResult(new { message, respuesta });
+        }
+
+        [HttpPost("EliminarReserva/{id}")]
         public async Task<IActionResult> EliminarReserva(int id)
         {
             bool respuesta = false;

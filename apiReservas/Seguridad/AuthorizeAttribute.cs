@@ -40,13 +40,13 @@ namespace apiReservas.Seguridad
             {
                 if(user == null)
                 {
-                    context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+                    context.Result = new JsonResult(new { message = "Unauthorized,Inicia Sesión" }) { StatusCode = StatusCodes.Status401Unauthorized };
                 }
                 else
                 {
                     if(timeExpired)
                     {
-                        context.Result = new JsonResult(new { message = "Sesion TimeOut" }) { StatusCode = StatusCodes.Status419AuthenticationTimeout };
+                        context.Result = new JsonResult(new { message = "Sesion TimeOut,Vuelve a iniciar Sesión" }) { StatusCode = StatusCodes.Status419AuthenticationTimeout };
                     }
                     else
                     {

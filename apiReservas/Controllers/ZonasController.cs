@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace apiReservas.Controllers
 {
+    [ApiExplorerSettings(GroupName = "principal")]
     [Route("api/[controller]")]
     [ApiController]
     public class ZonasController : ControllerBase
@@ -19,6 +20,7 @@ namespace apiReservas.Controllers
 
         [AllowAnonymous]
         [HttpGet("ListaZonas")]
+        [ApiExplorerSettings(GroupName = "mantenimiento")]
         public async Task<IActionResult> ListaZonas()
         {
             string message = "Lista Zonas";

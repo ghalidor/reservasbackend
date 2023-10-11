@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace apiReservas.Controllers
 {
+    [ApiExplorerSettings(GroupName = "principal")]
     [Route("api/[controller]")]
     [ApiController]
     public class MesasController : ControllerBase

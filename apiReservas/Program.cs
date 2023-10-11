@@ -1,6 +1,7 @@
 using apiReservas.Seguridad;
 using Aplication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
@@ -96,11 +97,22 @@ if (app.Environment.IsDevelopment())
 {
    
 }
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "swagger_custom")),
+    RequestPath = "/swagger_custom"
+});
 
 app.UseSwagger();
 app.UseSwaggerUI(c => {
     c.SwaggerEndpoint("/apireserva/swagger/principal/swagger.json", "Inicio");
-    c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false); });
+    c.InjectStylesheet("/apireserva/swagger_custom/prueba.css");
+    c.InjectJavascript("/apireserva/swagger_custom/swagger-custom-script.js", "text/javascript");
+    //c.HeadContent = @"<link rel=""stylesheet"" type=""text/css"" href=""/reservas2/swagger_custom/swagger-custom-styles.css"">";
+    c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
+    c.DefaultModelsExpandDepth(-1);
+});
+
 app.UseCors("cors");
 app.UseRouting();
 app.UseAuthentication();

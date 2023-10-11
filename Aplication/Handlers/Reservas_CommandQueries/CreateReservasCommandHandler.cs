@@ -35,7 +35,8 @@ namespace Aplication.Handlers.Reservas_CommandQueries
             ReservacionNuevo reserva = request.NewReservas;
 
             try
-            {
+            { 
+                int intervalo = Convert.ToInt32(_configuracion["variables:intervalo"]);
                 CorreoSends correo = new CorreoSends(_configuracion);
                 Reservas reservaNuevo = new Reservas();
                 reservaNuevo.Personas = reserva.Personas;
@@ -77,8 +78,8 @@ namespace Aplication.Handlers.Reservas_CommandQueries
                 {
                     string horaReservaActual = $"{reserva.Fecha.ToString("yyyy-MM-dd")} {reserva.Hora}";
                     DateTime horaDateReservaActual = Convert.ToDateTime(horaReservaActual);
-                    DateTime horaAnteriorDate = horaDateReservaActual.AddHours(-1);
-                    DateTime horaDespuesDate = horaDateReservaActual.AddHours(1);
+                    DateTime horaAnteriorDate = horaDateReservaActual.AddHours(Convert.ToInt32($"-{intervalo}"));
+                    DateTime horaDespuesDate = horaDateReservaActual.AddHours(intervalo);
 
                     List<int> listamesasCantPersonas = mesaenZona.Select(x => x.Pax).ToList();
                     seleccionMesa seleccionar = new seleccionMesa();

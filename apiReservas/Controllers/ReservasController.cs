@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace apiReservas.Controllers
 {
+    [ApiExplorerSettings(GroupName = "principal")]
     [Route("api/[controller]")]
     [ApiController]
     public class ReservasController : ControllerBase
@@ -28,6 +29,7 @@ namespace apiReservas.Controllers
 
         [AllowAnonymous]
         [HttpGet("ListarReservaHorasZonaMesaLibre/{fecha}")]
+        [ApiExplorerSettings(GroupName = "mantenimiento")]
         public async Task<IActionResult> GetBitacoraBySala(string fecha)
         {
             ServiceResponseReserva respuesta = new ServiceResponseReserva();
@@ -37,6 +39,7 @@ namespace apiReservas.Controllers
 
         [AllowAnonymous]
         [HttpPost("CrearReserva")]
+        [ApiExplorerSettings(GroupName = "mantenimiento")]
         public async Task<IActionResult> CrearReserva([FromBody] ReservacionNuevo reserva)
         {
             ServiceResponse respuesta = new ServiceResponse();

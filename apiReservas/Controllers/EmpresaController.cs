@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace apiReservas.Controllers
 {
+    [ApiExplorerSettings(GroupName = "principal")]
     [Route("api/[controller]")]
     [ApiController]
     public class EmpresaController : ControllerBase
@@ -20,6 +21,7 @@ namespace apiReservas.Controllers
 
         [AllowAnonymous]
         [HttpGet("RegistroEmpresa")]
+        [ApiExplorerSettings(GroupName = "mantenimiento")]
         public async Task<IActionResult> RegistroEmpresa()
         {
             string message = "Registro Empresa";

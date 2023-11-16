@@ -30,12 +30,32 @@ namespace apiReservas.Controllers
         [AllowAnonymous]
         [HttpGet("ListarReservaHorasZonaMesaLibre/{fecha}")]
         [ApiExplorerSettings(GroupName = "mantenimiento")]
-        public async Task<IActionResult> GetBitacoraBySala(string fecha)
+        public async Task<IActionResult> ListarReservaHorasZonaMesaLibre(string fecha)
         {
             ServiceResponseReserva respuesta = new ServiceResponseReserva();
             respuesta = await _mediator.Send(new ListHorasLibreReservasQuery() { fecha=fecha});
             return new OkObjectResult(new {data= respuesta });
         }
+
+        [HttpGet("ListarReservasSinZonas/{fechaini}/{fechafin}")]
+        public async Task<IActionResult> ListarReservasSinZonas(string fechaini, string fechafin)
+        {
+            string message = "Lista Reservas";
+            var data = await _mediator.Send(new ListReservaSinZonaQuery() { fechaini = fechaini, fechafin = fechafin });
+            return new OkObjectResult(new { message, data });
+        }
+
+
+        [AllowAnonymous]
+        [HttpGet("ListaHorasQuery")]
+        [ApiExplorerSettings(GroupName = "mantenimiento")]
+        public async Task<IActionResult> ListaHorasQuery()
+        {
+            ServiceResponseReserva respuesta = new ServiceResponseReserva();
+            respuesta = await _mediator.Send(new ListaHorasQuery() { });
+            return new OkObjectResult(new { data = respuesta });
+        }
+        
 
         [AllowAnonymous]
         [HttpPost("CrearReserva")]
@@ -50,6 +70,23 @@ namespace apiReservas.Controllers
                 return new OkObjectResult(new { message = respuesta.message, respuesta = respuesta.response });
             }
             var command = new CreateReservasCommand() { NewReservas = reserva };
+            respuesta = await _mediator.Send(command);
+            return new OkObjectResult(new { message = respuesta.message, respuesta = respuesta.response });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("CrearReservaSinZona")]
+        [ApiExplorerSettings(GroupName = "mantenimiento")]
+        public async Task<IActionResult> CrearReservaSinZona([FromBody] ReservacionNuevoSinZona reserva)
+        {
+            ServiceResponse respuesta = new ServiceResponse();
+            if(reserva == null)
+            {
+                respuesta.message = "No se envio Data";
+                respuesta.response = false;
+                return new OkObjectResult(new { message = respuesta.message, respuesta = respuesta.response });
+            }
+            var command = new CreateReservaSinZonaCommand() { NewReservas = reserva };
             respuesta = await _mediator.Send(command);
             return new OkObjectResult(new { message = respuesta.message, respuesta = respuesta.response });
         }

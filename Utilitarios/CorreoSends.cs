@@ -62,13 +62,22 @@ namespace Utilitarios
 
         }
 
-        public void envio_correoRemoto(Reservas registro, string destintariosRegistros)
+        public void envio_correoRemoto(Reservas registro,Empresa empresa, string destintariosRegistros)
         {
             string mensajeEnviar = $@"
-                                    <div style='background-color:#F6F0EF'>
-                                        <h3>Sr./Sra. : <strong>{registro.Nombre}</strong> </h3>
-                                        Su reservacion para el Dia {registro.Fecha} {registro.Hora} fue registrada
-                         <strong>Mensaje : </strong><span style='font-weight: lighter;'>{ registro.Mensaje} mts</span><br>
+                                    <div style='background-color:#F6F0EF;padding:5px;text-align:center'>
+                                        <h3>Hola : <strong>{registro.Nombre}</strong> </h3>
+                                        <h4>TU RESERVA ESTA CONFIRMADA</h4><br>
+                                        <div>{empresa.Nombre}</div>
+                                          <div>{empresa.direccion}</div>
+                                        <div>{empresa.Telefono}</div><br>
+ <div style=padding:5px;text-align:left'>A nombre de : <strong>{registro.Nombre}</strong></div>
+ <div style=padding:5px;text-align:left'>  <strong>{registro.Personas}</strong> Personas</div>
+ <div style=padding:5px;text-align:left'> <strong>{registro.Fecha.Date} {registro.Hora}</strong></div>
+ <div style=padding:5px;text-align:left'>Código de reserva : <strong>{registro.ReservaId}</strong></div>
+ <div style=padding:5px;text-align:left'>Mensaje : <strong>{registro.Mensaje}</strong></div><br>
+                                      
+                        <br><br>
                                     </div>";
 
 

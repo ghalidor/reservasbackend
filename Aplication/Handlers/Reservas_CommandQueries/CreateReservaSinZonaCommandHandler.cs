@@ -15,12 +15,15 @@ namespace Aplication.Handlers.Reservas_CommandQueries
         private readonly IReservaMesaRepository _reservaMesaRepository;
         private readonly IMesasRepository _mesasRepository;
         private readonly IConfiguration _configuracion;
-        public CreateReservaSinZonaCommandHandler(IReservasRepository reservasRepository, IMesasRepository mesasRepository, IReservaMesaRepository reservaMesaRepository, IConfiguration configuracion)
+        private readonly IEmpresaRepository _empresaRepository;
+        public CreateReservaSinZonaCommandHandler(IReservasRepository reservasRepository, IMesasRepository mesasRepository, IReservaMesaRepository reservaMesaRepository,
+            IConfiguration configuracion,IEmpresaRepository empresaRepository)
         {
             _reservasRepository = reservasRepository;
             _mesasRepository = mesasRepository;
             _reservaMesaRepository = reservaMesaRepository;
             _configuracion = configuracion;
+            _empresaRepository = empresaRepository;
         }
 
         public async Task<ServiceResponse> Handle(CreateReservaSinZonaCommand request, CancellationToken cancellationToken)
@@ -52,11 +55,11 @@ namespace Aplication.Handlers.Reservas_CommandQueries
                 DateTime horaDateReservaActual = Convert.ToDateTime(horaReservaActual);
                 DateTime horaAnteriorDate = horaDateReservaActual.AddHours(Convert.ToInt32($"-{intervalo}"));
                 DateTime horaDespuesDate = horaDateReservaActual.AddHours(intervalo);
-
+                var empresa = await _empresaRepository.RegistroEmpresa();
                 int idreserva = await _reservasRepository.CreateReservaReturnId(reservaNuevo);
                 if(idreserva > 0)
                 {
-                    
+                    reservaNuevo.ReservaId = idreserva;
                     response.response = true;
                     response.message = "Registrado Corréctamente";
 
@@ -64,7 +67,7 @@ namespace Aplication.Handlers.Reservas_CommandQueries
                     List<string> destinatarios_lista = destinatarios.Split(',').ToList();
                     destinatarios_lista.Add(reserva.Correo);
                     string listaCorreosEnviar = String.Join(",", destinatarios_lista);
-                    correo.envio_correoRemoto(reservaNuevo, listaCorreosEnviar);
+                    correo.envio_correoRemoto(reservaNuevo, empresa, listaCorreosEnviar);
                 }
                 else
                 {

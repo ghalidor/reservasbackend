@@ -23,6 +23,7 @@ namespace Persistence.Repositories
       ,[AtencionHoraInicio]
       ,[AtencionHoraFin]
       ,[Telefono]
+,[direccion]
 ,[Personas]
   FROM Empresa (nolock) order by Empresa_id desc";
             return await db.QueryFirstOrDefaultAsync<Empresa>(sql);
@@ -39,7 +40,8 @@ namespace Persistence.Repositories
                                     AtencionHoraInicio = @AtencionHoraInicio,
                                     AtencionHoraFin = @AtencionHoraFin,
                                     Telefono = @Telefono,
-                                    Personas=@Personas
+                                    Personas=@Personas,
+direccion=@direccion
                                     where Empresa_id=@Empresa_id";
             var result = await db.ExecuteAsync(
                     sql, empresa);

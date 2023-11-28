@@ -83,7 +83,7 @@ namespace Utilitarios
 
 
             //string listaCorreosEnviar = String.Join(",", destintariosRegistros.Select(x => x.WEB_DestCorreo));
-            SenEmail(destintariosRegistros, "RRESERVA REALIZADA DIA " + registro.Fecha, mensajeEnviar, true);
+            SenEmail(destintariosRegistros, "RESERVA REALIZADA DIA " + registro.Fecha, mensajeEnviar, true);
         }
     }
 }

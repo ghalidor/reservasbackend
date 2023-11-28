@@ -15,14 +15,17 @@ namespace Aplication.Handlers.Reservas_CommandQueries
         private readonly IMesasRepository _mesasRepository;
         private readonly IZonasRepository _zonasRepository;
         private readonly IConfiguration _configuracion;
+        private readonly IEmpresaRepository _empresaRepository;
         public CreateReservasCommandHandler(IReservasRepository reservasRepository, IMesasRepository mesasRepository,
-            IZonasRepository zonasRepository, IReservaMesaRepository reservaMesaRepository, IConfiguration configuracion)
+            IZonasRepository zonasRepository, IReservaMesaRepository reservaMesaRepository, IConfiguration configuracion,
+            IEmpresaRepository empresaRepository)
         {
             _reservasRepository = reservasRepository;
             _mesasRepository = mesasRepository;
             _zonasRepository = zonasRepository;
             _reservaMesaRepository = reservaMesaRepository;
             _configuracion = configuracion;
+            _empresaRepository = empresaRepository;
         }
 
         public async Task<ServiceResponse> Handle(CreateReservasCommand request, CancellationToken cancellationToken)
@@ -109,12 +112,12 @@ namespace Aplication.Handlers.Reservas_CommandQueries
                             }
                             response.response = true;
                             response.message = "Registrado Corréctamente";
-
+                            var empresa = await _empresaRepository.RegistroEmpresa();
                             string destinatarios = _configuracion["variables:destinatarios"];
                             List<string> destinatarios_lista = destinatarios.Split(',').ToList();
                             destinatarios_lista.Add(reserva.Correo);
                             string listaCorreosEnviar = String.Join(",", destinatarios_lista);
-                            correo.envio_correoRemoto(reservaNuevo, listaCorreosEnviar);
+                            correo.envio_correoRemoto(reservaNuevo,empresa, listaCorreosEnviar);
                         }
                         else
                         {

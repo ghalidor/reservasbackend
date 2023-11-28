@@ -11,6 +11,7 @@ namespace Domain
         public string AtencionHoraFin { get; set; }
         public string Telefono { get; set; }
         public int Personas { get; set; }
+        public string direccion { get; set; }
     }
 
     public class UsuarioResponse

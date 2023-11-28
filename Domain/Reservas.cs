@@ -39,7 +39,20 @@ namespace Domain
         public string Correo { get; set; }
     }
 
-    public class ReservacionHoras
+    public class ReservacionNuevoSinZona
+    {
+        public int Personas { get; set; }
+        public DateTime Fecha { get; set; }
+        public string Hora { get; set; }
+        public string NroDocumento { get; set; }
+        public string Nombre { get; set; }
+        public string Telefono { get; set; }
+        public string Mensaje { get; set; }
+        public bool Mascotas { get; set; }
+        public string Correo { get; set; }
+    }
+
+        public class ReservacionHoras
     {
         public string Hora { get; set; }
         public DateTime Fecha { get; set; }
